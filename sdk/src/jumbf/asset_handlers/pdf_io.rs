@@ -227,7 +227,7 @@ pub mod tests {
 
     #[test]
     fn test_cai_read_xmp_finds_xmp_data() {
-        let source = include_bytes!("../../tests/fixtures/basic.pdf");
+        let source = include_bytes!("../../../tests/fixtures/basic.pdf");
         let mut stream = Cursor::new(source.to_vec());
 
         let pdf_io = PdfIO::new("pdf");
@@ -236,7 +236,7 @@ pub mod tests {
 
     #[test]
     fn test_read_cai_returns_cai_bytes() {
-        let source = include_bytes!("../../tests/fixtures/basic.pdf");
+        let source = include_bytes!("../../../tests/fixtures/basic.pdf");
 
         let mut pdf = Pdf::from_bytes(source).unwrap();
         assert!(pdf.read_manifest_bytes().unwrap().is_none());

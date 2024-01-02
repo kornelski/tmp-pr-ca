@@ -11,6 +11,9 @@
 // specific language governing permissions and limitations under
 // each license.
 
+pub mod asset_handlers;
 pub mod boxes;
 pub mod boxio;
+pub mod jumbf_io;
 pub mod labels;
+pub use asset_handlers::asset_io;

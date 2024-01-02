@@ -733,7 +733,7 @@ pub mod tests {
 
     #[test]
     fn test_write_cai_using_stream_existing_cai_data() {
-        let source = include_bytes!("../../tests/fixtures/exp-test1.png");
+        let source = include_bytes!("../../../tests/fixtures/exp-test1.png");
         let mut stream = Cursor::new(source.to_vec());
         let png_io = PngIO {};
 
@@ -759,7 +759,7 @@ pub mod tests {
 
     #[test]
     fn test_write_cai_using_stream_no_cai_data() {
-        let source = include_bytes!("../../tests/fixtures/libpng-test.png");
+        let source = include_bytes!("../../../tests/fixtures/libpng-test.png");
         let mut stream = Cursor::new(source.to_vec());
         let png_io = PngIO {};
 
@@ -785,7 +785,7 @@ pub mod tests {
 
     #[test]
     fn test_write_cai_data_to_stream_wrong_format() {
-        let source = include_bytes!("../../tests/fixtures/C.jpg");
+        let source = include_bytes!("../../../tests/fixtures/C.jpg");
         let mut stream = Cursor::new(source.to_vec());
         let png_io = PngIO {};
 
@@ -799,7 +799,7 @@ pub mod tests {
 
     #[test]
     fn test_stream_object_locations() {
-        let source = include_bytes!("../../tests/fixtures/exp-test1.png");
+        let source = include_bytes!("../../../tests/fixtures/exp-test1.png");
         let mut stream = Cursor::new(source.to_vec());
         let png_io = PngIO {};
         let cai_pos = png_io
@@ -815,7 +815,7 @@ pub mod tests {
 
     #[test]
     fn test_stream_object_locations_with_incorrect_file_type() {
-        let source = include_bytes!("../../tests/fixtures/unsupported_type.txt");
+        let source = include_bytes!("../../../tests/fixtures/unsupported_type.txt");
         let mut stream = Cursor::new(source.to_vec());
         let png_io = PngIO {};
         assert!(matches!(
@@ -826,7 +826,7 @@ pub mod tests {
 
     #[test]
     fn test_stream_object_locations_adds_offsets_to_file_without_claims() {
-        let source = include_bytes!("../../tests/fixtures/libpng-test.png");
+        let source = include_bytes!("../../../tests/fixtures/libpng-test.png");
         let mut stream = Cursor::new(source.to_vec());
 
         let png_io = PngIO {};

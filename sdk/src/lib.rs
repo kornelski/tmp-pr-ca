@@ -95,7 +95,7 @@ pub use error::{Error, Result};
 
 mod ingredient;
 pub use ingredient::Ingredient;
-pub mod jumbf_io;
+pub use jumbf::jumbf_io;
 mod manifest;
 pub use manifest::Manifest;
 mod manifest_assertion;
@@ -124,9 +124,12 @@ pub use signer::{AsyncSigner, RemoteSigner, Signer};
 #[allow(dead_code, clippy::enum_variant_names)]
 pub(crate) mod asn1;
 pub(crate) mod assertion;
-pub(crate) mod asset_handlers;
-pub(crate) mod asset_io;
-pub use asset_io::{CAIRead, CAIReadWrite};
+//pub(crate) mod asset_handlers;
+//pub(crate) mod asset_io;
+pub use jumbf::{
+    asset_handlers, asset_io,
+    asset_io::{CAIRead, CAIReadWrite},
+};
 /// crate private declarations
 pub(crate) mod claim;
 
