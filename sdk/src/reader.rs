@@ -238,6 +238,7 @@ impl Reader {
     /// let uri = &manifest.thumbnail_ref().unwrap().identifier;
     /// let bytes_written = reader.resource_to_stream(uri, stream).unwrap();
     /// ```
+    #[async_generic()]
     pub fn resource_to_stream(
         &self,
         uri: &str,

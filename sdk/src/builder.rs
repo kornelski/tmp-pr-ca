@@ -1342,7 +1342,7 @@ mod tests {
             let mut dest = Cursor::new(Vec::new());
 
             let mut builder = Builder::from_json(&manifest_json()).unwrap();
-            let mut ingredient = Ingredient::new("Test", format, "12345");
+            let ingredient = Ingredient::new("Test", format, "12345");
             builder
                 .add_ingredient_from_stream(ingredient, format, &mut source)
                 .unwrap();
