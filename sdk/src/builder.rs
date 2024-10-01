@@ -383,10 +383,12 @@ impl Builder {
         stream: &mut R,
     ) -> Result<&'a mut Ingredient>
     where
-        T: Into<String>,
+        T: TryInto<Ingredient>,
         R: Read + Seek + Send,
     {
-        let ingredient: Ingredient = Ingredient::from_json(&ingredient_json.into())?;
+        let ingredient: Ingredient = ingredient_json
+            .try_into()
+            .map_err(|_| Error::BadParam("Not a valid Ingredient".to_string()))?; //Ingredient::from_json(&ingredient_json.into())?;
         let ingredient = if _sync {
             ingredient.with_stream(format, stream)?
         } else {
@@ -1019,6 +1021,25 @@ impl Builder {
     }
 }
 
+impl TryFrom<&str> for Builder {
+    type Error = Error;
+
+    fn try_from(value: &str) -> Result<Self> {
+        Self::from_json(value)
+    }
+}
+
+impl TryFrom<ManifestDefinition> for Builder {
+    type Error = Error;
+
+    fn try_from(value: ManifestDefinition) -> Result<Self> {
+        Ok(Self {
+            definition: value,
+            ..Default::default()
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     #![allow(clippy::expect_used)]
@@ -1321,8 +1342,9 @@ mod tests {
             let mut dest = Cursor::new(Vec::new());
 
             let mut builder = Builder::from_json(&manifest_json()).unwrap();
+            let mut ingredient = Ingredient::new("Test", format, "12345");
             builder
-                .add_ingredient_from_stream(parent_json(), format, &mut source)
+                .add_ingredient_from_stream(ingredient, format, &mut source)
                 .unwrap();
 
             builder
@@ -1594,5 +1616,10 @@ mod tests {
                 .format,
             "image/jpeg",
         );
+    }
+
+    #[test]
+    fn test_builder_from_manifest_definition() {
+        let _builder = Builder::try_from(ManifestDefinition::default()).unwrap();
     }
 }

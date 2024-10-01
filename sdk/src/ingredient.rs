@@ -14,7 +14,7 @@
 #![deny(missing_docs)]
 #[cfg(feature = "file_io")]
 use std::path::{Path, PathBuf};
-use std::{borrow::Cow, io::Cursor};
+use std::{borrow::Cow, convert::TryFrom, io::Cursor};
 
 use async_generic::async_generic;
 use log::{debug, error};
@@ -1430,6 +1430,32 @@ pub trait IngredientOptions {
     /// If Some, binary data will be stored in files in the given folder
     fn base_path(&self) -> Option<&Path> {
         None
+    }
+}
+
+impl TryFrom<&str> for Ingredient {
+    type Error = Error;
+
+    fn try_from(value: &str) -> Result<Self> {
+        Self::from_json(value)
+    }
+}
+
+// This is required for some backward compatibility issues.
+impl TryFrom<String> for Ingredient {
+    type Error = Error;
+
+    fn try_from(value: String) -> Result<Self> {
+        Self::from_json(&value)
+    }
+}
+
+// This is required for some backward compatibility issues.
+impl TryFrom<&String> for Ingredient {
+    type Error = Error;
+
+    fn try_from(value: &String) -> Result<Self> {
+        Self::from_json(value)
     }
 }
 
