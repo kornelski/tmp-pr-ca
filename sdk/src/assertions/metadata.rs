@@ -269,17 +269,24 @@ pub enum ReviewCode {
 
 /// A rating on an Assertion.
 ///
-/// See <https://c2pa.org/specifications/specifications/1.0/specs/C2PA_Specification.html#_claim_review>.
+/// When present, the reviewRating provides a place for the claim generator to provide one or more
+/// rating objects on the quality (or lack thereof) of an assertion.
+///
+/// See <https://c2pa.org/specifications/specifications/2.1/specs/C2PA_Specification.html#_review_ratings>.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 #[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 pub struct ReviewRating {
+    /// A human readable string explaining why the rating is what it is.
     pub explanation: String,
     #[serde(skip_serializing_if = "Option::is_none")]
+    /// A label-formatted string that describes the reason for the rating.
     pub code: Option<String>,
+    /// A value from 1 (worst) to 5 (best) of the rating of the item.
     pub value: u8,
 }
 
 impl ReviewRating {
+    /// Creates a new `ReviewRating` with the given explanation, code, and value.
     pub fn new(explanation: &str, code: Option<String>, value: u8) -> Self {
         Self {
             explanation: explanation.to_owned(),
@@ -291,10 +298,14 @@ impl ReviewRating {
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Eq, Clone)]
 #[cfg_attr(feature = "json_schema", derive(JsonSchema))]
+/// A detailed type related to an asset. This can be a standard c2pa type or a custom type.
 pub struct AssetType {
     #[serde(rename = "type")]
+    /// One of the predefined types or a custom value.
+    /// See <https://c2pa.org/specifications/specifications/1.4/specs/C2PA_Specification.html#_schema_and_example_11>.
     pub asset_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
+    /// An optional version string for the asset type.
     pub version: Option<String>,
 }
 
