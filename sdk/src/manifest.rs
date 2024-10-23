@@ -458,6 +458,7 @@ impl Manifest {
     }
 
     /// Add verifiable credentials
+    #[deprecated(since = "0.38.0", note = "Obsolete, will be supported with CAWG")]
     pub fn add_verifiable_credential<T: Serialize>(&mut self, data: &T) -> Result<&mut Self> {
         let value = serde_json::to_value(data).map_err(|_err| Error::AssertionEncoding)?;
         match self.credentials.as_mut() {
@@ -727,6 +728,7 @@ impl Manifest {
     /// this method can be used to ensure that data is correct
     /// it will extract filename,format and xmp info and generate a thumbnail
     #[cfg(feature = "file_io")]
+    #[deprecated(since = "0.38.0")]
     pub fn set_asset_from_path<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
         // Gather the information we need from the target path
         let ingredient = Ingredient::from_file_info(path.as_ref());
@@ -995,6 +997,7 @@ impl Manifest {
     // factor out this code to set up the destination path with a file
     // so we can use set_asset_from_path to initialize the right fields in Manifest
     #[cfg(feature = "file_io")]
+
     fn embed_prep<P: AsRef<Path>>(&mut self, source_path: P, dest_path: P) -> Result<P> {
         let mut copied = false;
 
@@ -1012,6 +1015,7 @@ impl Manifest {
             copied = true;
         }
         // first add the information about the target file
+        #[allow(deprecated)]
         self.set_asset_from_path(dest_path.as_ref())?;
 
         if copied {
@@ -1101,6 +1105,7 @@ impl Manifest {
     ///
     /// Returns the bytes of the new asset
     #[deprecated(since = "0.35.0", note = "obsolete test")]
+
     pub fn embed_stream(
         &mut self,
         format: &str,
@@ -1111,6 +1116,7 @@ impl Manifest {
         let output_vec: Vec<u8> = Vec::new();
         let mut output_stream = Cursor::new(output_vec);
 
+        #[allow(deprecated)]
         self.embed_to_stream(format, stream, &mut output_stream, signer)?;
 
         Ok(output_stream.into_inner())
@@ -1120,6 +1126,7 @@ impl Manifest {
     ///
     /// Returns the bytes of c2pa_manifest that was embedded.
     #[allow(deprecated)]
+    #[deprecated(since = "0.38.0", note = "use Builder.sign_file instead")]
     #[async_generic(async_signature(
         &mut self,
         format: &str,
@@ -1256,6 +1263,7 @@ impl Manifest {
         output_path: P,
         signer: &dyn Signer,
     ) -> Result<()> {
+        #[allow(deprecated)]
         self.set_asset_from_path(asset_path.as_ref())?;
 
         // convert the manifest to a store
@@ -1403,6 +1411,7 @@ impl Manifest {
     /// Formats a signed manifest for embedding in the given format
     ///
     /// For instance, this would return one or JPEG App11 segments containing the manifest
+    #[deprecated(since = "0.38.0", note = "use Builder.sign_file instead")]
     pub fn composed_manifest(manifest_bytes: &[u8], format: &str) -> Result<Vec<u8>> {
         Store::get_composed_manifest(manifest_bytes, format)
     }
@@ -1412,6 +1421,7 @@ impl Manifest {
     /// expect that it has not been placed into an output asset and has not
     /// been signed.  Use embed_placed_manifest to insert into the asset
     /// referenced by input_stream
+    #[deprecated(since = "0.85.0", note = "use dynamic assertions instead")]
     pub fn get_placed_manifest(
         &mut self,
         reserve_size: usize,
@@ -1431,6 +1441,7 @@ impl Manifest {
     /// used in get_placed_manifest.  The caller can supply list of ManifestPathCallback
     /// traits to make any modifications to assertions.  The callbacks are processed before
     /// the manifest is signed.  
+    #[deprecated(since = "0.85.0", note = "use dynamic assertions instead")]
     pub fn embed_placed_manifest(
         manifest_bytes: &[u8],
         format: &str,
@@ -1700,6 +1711,7 @@ pub(crate) mod tests {
     fn test_verifiable_credential() {
         let mut manifest = test_manifest();
         let vc: serde_json::Value = serde_json::from_str(TEST_VC).unwrap();
+        #[allow(deprecated)]
         manifest
             .add_verifiable_credential(&vc)
             .expect("verifiable_credential");
@@ -2100,6 +2112,7 @@ pub(crate) mod tests {
         let signer = temp_signer();
         let mut output = Cursor::new(Vec::new());
         // Embed a manifest using the signer.
+        #[allow(deprecated)]
         manifest
             .embed_to_stream("jpeg", &mut stream, &mut output, signer.as_ref())
             .expect("embed_stream");
@@ -2138,6 +2151,7 @@ pub(crate) mod tests {
         let signer = temp_async_signer();
         let mut output = Cursor::new(Vec::new());
         // Embed a manifest using the signer.
+        #[allow(deprecated)]
         manifest
             .embed_to_stream_async("jpeg", &mut stream, &mut output, signer.as_ref())
             .await
@@ -2393,6 +2407,7 @@ pub(crate) mod tests {
         let signer = temp_signer();
         // Embed a manifest using the signer.
         let mut output = Cursor::new(Vec::new());
+        #[allow(deprecated)]
         manifest
             .embed_to_stream("jpeg", &mut input, &mut output, signer.as_ref())
             .expect("embed_stream");
@@ -2644,6 +2659,7 @@ pub(crate) mod tests {
         let mut source = std::io::Cursor::new(vec![1, 2, 3]);
         let mut dest = std::io::Cursor::new(Vec::new());
         let signer = temp_signer();
+        #[allow(deprecated)]
         let result =
             manifest.embed_to_stream("image/jpeg", &mut source, &mut dest, signer.as_ref());
         assert!(result.is_err());
